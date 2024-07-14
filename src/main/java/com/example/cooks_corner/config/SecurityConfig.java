@@ -57,6 +57,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/register", "/api/login")
                                 .permitAll()
                                 .requestMatchers("/api/test/protected").authenticated()
+                                .requestMatchers("/api/recipe/**").authenticated()
                                 .requestMatchers(
                                         "/v2/api-docs",
                                         "/v3/api-docs/**",

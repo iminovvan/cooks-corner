@@ -39,7 +39,7 @@ public class Recipe {
     @JoinColumn(name = "user_id")
     private User user;
     @Column(name = "cooking_time")
-    private int cookingTime;
+    private String cookingTime;
     @ManyToMany
     @JoinTable(
             name = "user_liked_recipes",
