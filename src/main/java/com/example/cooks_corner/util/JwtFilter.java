@@ -2,6 +2,7 @@ package com.example.cooks_corner.util;
 
 import com.example.cooks_corner.entity.User;
 import com.example.cooks_corner.exception.NotFoundException;
+import com.example.cooks_corner.repository.TokenBlacklistRepository;
 import com.example.cooks_corner.repository.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -23,6 +24,7 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final TokenBlacklistRepository tokenBlacklistRepository;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -35,6 +37,13 @@ public class JwtFilter extends OncePerRequestFilter {
         if (tokenHeader != null && tokenHeader.startsWith("Bearer ")) {
             jwtToken = tokenHeader.substring(7);
             try {
+                if(tokenBlacklistRepository.isTokenBlacklisted(jwtToken)){
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("Token is blacklisted");
+                    response.getWriter().flush();
+                    return;
+                }
+
                 email = jwtService.extractEmail(jwtToken);
             } catch (ExpiredJwtException e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
