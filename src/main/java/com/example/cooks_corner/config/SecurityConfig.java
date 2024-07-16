@@ -37,10 +37,9 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setAllowedOrigins(Arrays.asList(
-                "http://localhost:3000",
-                "http://localhost:8080"
-        ));
+        corsConfiguration.addAllowedOriginPattern("https://*");
+        corsConfiguration.addAllowedOriginPattern("http://*");
+        //corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080"));
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.addAllowedHeader("*");
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
@@ -56,8 +55,8 @@ public class SecurityConfig {
                         authorizedHttpRequests
                                 .requestMatchers("/api/register", "/api/login")
                                 .permitAll()
-                                .requestMatchers("/api/test/protected").authenticated()
                                 .requestMatchers("/api/recipe/**").authenticated()
+                                .requestMatchers("/api/user/**", "/api/logout").authenticated()
                                 .requestMatchers(
                                         "/v2/api-docs",
                                         "/v3/api-docs/**",
