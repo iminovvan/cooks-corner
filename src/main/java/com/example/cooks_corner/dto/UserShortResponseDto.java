@@ -1,6 +1,5 @@
 package com.example.cooks_corner.dto;
 
-import com.example.cooks_corner.entity.Image;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -10,6 +10,7 @@ import com.example.cooks_corner.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -196,7 +197,7 @@ public class RecipeController {
                             name = "title",
                             description = "Title of the recipe to search for",
                             required = true,
-                            example = "Pancakes"
+                            schema = @Schema(type = "string")
                     )
             },
             responses = {
@@ -204,7 +205,10 @@ public class RecipeController {
                             responseCode = "200",
                             description = "Recipes retrieved successfully",
                             content = @Content(
-                                    schema = @Schema(implementation = RecipeShortResponseDto[].class)
+                                    schema = @Schema(implementation = RecipeShortResponseDto[].class),
+                                    examples = @ExampleObject(
+                                            value = "[{\"id\": 1, \"title\": \"Pancakes\", \"userName\": \"john_doe\", \"imageUrl\": \"https://res.cloudinary.com/demo/image/upload/v1620000000/sample.jpg\", \"likesCount\": 150, \"savesCount\": 75}]"
+                                    )
                             )
                     ),
                     @ApiResponse(responseCode = "400", description = "Invalid title parameter", content = @Content),
@@ -226,7 +230,7 @@ public class RecipeController {
                             name = "category",
                             description = "Category of the recipe to retrieve",
                             required = true,
-                            example = "Breakfast"
+                            schema = @Schema(type = "string")
                     )
             },
             responses = {
@@ -234,7 +238,10 @@ public class RecipeController {
                             responseCode = "200",
                             description = "Recipes retrieved successfully",
                             content = @Content(
-                                    schema = @Schema(implementation = RecipeShortResponseDto[].class)
+                                    schema = @Schema(implementation = RecipeShortResponseDto[].class),
+                                    examples = @ExampleObject(
+                                            value = "[{\"id\": 1, \"title\": \"Pancakes\", \"userName\": \"John Doe\", \"imageUrl\": \"https://res.cloudinary.com/demo/image/upload/v1620000000/sample.jpg\", \"likesCount\": 150, \"savesCount\": 75}]"
+                                    )
                             )
                     ),
                     @ApiResponse(responseCode = "404", description = "No recipes found", content = @Content),

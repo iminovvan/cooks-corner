@@ -11,13 +11,14 @@ import io.swagger.v3.oas.annotations.servers.Server;
                         name = "Nargiza",
                         email = "nargizh03@gmail.com"
                 ),
-                title = "Lorby",
+                title = "CooksCorner",
                 description = "API documentation for authentication project",
                 version = "0.0.1"
         ),
         servers = {
                 @Server(
-                        description = "Railway Server"
+                        description = "Railway Server",
+                        url = "https://cooks-corner-prod.up.railway.app/"
                 )
         }
 )

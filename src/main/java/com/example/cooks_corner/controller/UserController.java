@@ -8,6 +8,7 @@ import com.example.cooks_corner.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -151,7 +152,13 @@ public class UserController {
             ),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Users found successfully",
-                            content = @Content(schema = @Schema(implementation = UserShortResponseDto[].class))),
+                            content = @Content(
+                                    schema = @Schema(implementation = UserShortResponseDto[].class),
+                                    examples = @ExampleObject(
+                                            value = "[{\"id\": 1, \"name\": \"John Doe\", \"userPhotoUrl\": \"https://res.cloudinary.com/demo/image/upload/v1620000000/sample.jpg\"}]"
+                                    )
+                            )
+                    ),
                     @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content),
                     @ApiResponse(responseCode = "404", description = "No users found", content = @Content)
             }
