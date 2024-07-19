@@ -4,6 +4,8 @@ import com.example.cooks_corner.controller.UserController;
 import com.example.cooks_corner.dto.MyUserResponseDto;
 import com.example.cooks_corner.dto.UserEditDto;
 import com.example.cooks_corner.dto.UserResponseDto;
+import com.example.cooks_corner.dto.UserShortResponseDto;
+import com.example.cooks_corner.exception.FollowException;
 import com.example.cooks_corner.exception.NotFoundException;
 import com.example.cooks_corner.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,8 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.security.Principal;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -96,5 +100,94 @@ public class UserControllerTest {
         var exception = assertThrows(NotFoundException.class, () -> userController.editUser("Test User", "Description", photo, principal));
 
         assertEquals("User not found", exception.getMessage());
+    }
+
+    @Test
+    void testFollowUserSuccess() {
+        Principal principal = () -> "test@example.com";
+
+        doNothing().when(userService).followUser(anyLong(), anyString());
+
+        var result = userController.followUser(1L, principal);
+
+        assertEquals(200, result.getStatusCode().value());
+        assertEquals(Map.of("message", "User added to followings successfully"), result.getBody());
+    }
+
+    @Test
+    void testFollowUserNotFound() {
+        Principal principal = () -> "test@example.com";
+
+        doThrow(new NotFoundException("User not found")).when(userService).followUser(anyLong(), anyString());
+
+        var exception = assertThrows(NotFoundException.class, () -> userController.followUser(1L, principal));
+
+        assertEquals("User not found", exception.getMessage());
+    }
+
+    @Test
+    void testFollowUserSelfFollow() {
+        Principal principal = () -> "test@example.com";
+
+        doThrow(new FollowException("User cannot follow himself")).when(userService).followUser(anyLong(), anyString());
+
+        var exception = assertThrows(FollowException.class, () -> userController.followUser(1L, principal));
+
+        assertEquals("User cannot follow himself", exception.getMessage());
+    }
+
+    @Test
+    void testUnfollowUserSuccess() {
+        Principal principal = () -> "test@example.com";
+
+        doNothing().when(userService).unfollowUser(anyLong(), anyString());
+
+        var result = userController.unfollowUser(1L, principal);
+
+        assertEquals(200, result.getStatusCode().value());
+        assertEquals(Map.of("message", "User removed from followings successfully"), result.getBody());
+    }
+
+    @Test
+    void testUnfollowUserNotFound() {
+        Principal principal = () -> "test@example.com";
+
+        doThrow(new NotFoundException("User not found")).when(userService).unfollowUser(anyLong(), anyString());
+
+        var exception = assertThrows(NotFoundException.class, () -> userController.unfollowUser(1L, principal));
+
+        assertEquals("User not found", exception.getMessage());
+    }
+
+    @Test
+    void testUnfollowUserSelfUnfollow() {
+        Principal principal = () -> "test@example.com";
+
+        doThrow(new FollowException("User cannot unfollow himself")).when(userService).unfollowUser(anyLong(), anyString());
+
+        var exception = assertThrows(FollowException.class, () -> userController.unfollowUser(1L, principal));
+
+        assertEquals("User cannot unfollow himself", exception.getMessage());
+    }
+
+    @Test
+    void testFindUserByNameSuccess() {
+        UserShortResponseDto userShortResponseDto = new UserShortResponseDto();
+        when(userService.findUsersByName(anyString())).thenReturn(List.of(userShortResponseDto));
+
+        var result = userController.findUserByName("John");
+
+        assertEquals(200, result.getStatusCode().value());
+        assertEquals(List.of(userShortResponseDto), result.getBody());
+    }
+
+    @Test
+    void testFindUserByNameNoUsersFound() {
+        when(userService.findUsersByName(anyString())).thenReturn(Collections.emptyList());
+
+        var result = userController.findUserByName("NonExistingName");
+
+        assertEquals(200, result.getStatusCode().value());
+        assertEquals(Collections.emptyList(), result.getBody());
     }
 }
