@@ -36,7 +36,7 @@ public class JwtService {
         byte[] keyBytes = Base64.getDecoder().decode(SECRET_KEY);
         Key key = new SecretKeySpec(keyBytes, 0, keyBytes.length, "HmacSHA256");
 
-        long expirationMillis = 60 * 60 * 1000L;
+        long expirationMillis = 12 * 60 * 60 * 1000L;
 
         return Jwts.builder()
                 .setClaims(claims)
