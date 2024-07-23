@@ -37,12 +37,8 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowCredentials(true);
-        //corsConfiguration.addAllowedOriginPattern("https://*");
-        //corsConfiguration.addAllowedOriginPattern("http://*");
-        corsConfiguration.setAllowedOrigins(Arrays.asList(
-                "http://localhost:3000",
-                "https://cooks-corner-beige.vercel.app"
-        ));
+        corsConfiguration.addAllowedOriginPattern("https://*");
+        corsConfiguration.addAllowedOriginPattern("http://*");
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.addAllowedHeader("*");
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
